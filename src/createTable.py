@@ -1,7 +1,7 @@
 import psycopg2
 import os
 import json
-from QuerySearch import CoverageSearchService as QService
+from CoverageSearch import CoverageSearchService as QService
 import DbManager
 from dotenv import load_dotenv
 
