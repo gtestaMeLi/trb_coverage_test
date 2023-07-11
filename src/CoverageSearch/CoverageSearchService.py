@@ -3,7 +3,7 @@ import DbManager
 import psycopg2
 
 def searchCoverageByPointAndRadius(lat,lon,radius):
-    query = 'SELECT flex.zone_id FROM (SELECT zone_id, geom FROM public.flex_trb) AS flex JOIN (SELECT ST_Buffer(po.geom, {}, \'quad_segs=8\') as buffer FROM (SELECT ST_POINT({},{})::geography as geom) as po) AS Punto ON ST_Intersects(flex.geom, Punto.buffer)'.format(radius,lat,lon)
+    query = 'SELECT flex.zone_id FROM (SELECT zone_id, geom FROM public.flex_trb) AS flex JOIN (SELECT ST_Buffer(po.geom, {}, \'quad_segs=8\') as buffer FROM (SELECT ST_POINT({},{})::geography as geom) as po) AS Punto ON ST_Intersects(flex.geom, Punto.buffer)'.format(radius,lon,lat)
     try:
         coverage = DbManager.executeQueryAndFetchAll(query, None)
         if coverage == None or len(coverage) == 0:
