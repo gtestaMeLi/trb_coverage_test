@@ -1,24 +1,18 @@
-import geopandas as gpd
-from shapely.geometry import  Point
-import matplotlib.pyplot as plt
 
+from flask import Flask
+from CoverageSearch import CoverageSearchApi
+#import createTable
+from flask_cors import CORS
 
-def get_data():
-    return gpd.read_file("data/geodata.geojson")
+app = Flask(__name__)
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
+def page_not_found(error):
+    return "<h1>Page not found D:</h1>", 404
 
-data = get_data()
-insidePoint = Point(-58.40622469078019,-34.758074907067915)
-coverageRing = gpd.GeoSeries([insidePoint.buffer(0.1)], crs="EPSG:4326")
+if __name__ == '__main__':
+    #createTable.try_build_db()
+    app.register_blueprint(CoverageSearchApi.main, url_prefix='/coverage')
 
-fig,ax = plt.subplots()
-data.plot(ax=ax)
-coverageRing.plot(ax=ax,color="red")
-f = open('results/coverage.json', 'w')
-f.write(data.intersects(coverageRing).to_json())
-
-# print(data.intersects(insidePoint))
-# print(data.disjoint(insidePoint))
-# print(data.touches(insidePoint))
-
-print("finished")
+    app.register_error_handler(404, page_not_found)
+    app.run(use_reloader=False)
